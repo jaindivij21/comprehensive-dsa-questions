@@ -1,35 +1,62 @@
-// Leetcode: Robot Return to Origin
-// https://leetcode.com/problems/robot-return-to-origin
+// Leetcode: Count Days Spent Together
+// https://leetcode.com/problems/count-days-spent-together
 
+#include <algorithm>
 #include <iostream>
-#include <unordered_map>
+#include <string>
+#include <vector>
 using namespace std;
 
-// Simulation
-class Solution {
+class Solution
+{
+   private:
+    vector<int> daysOfTheMonth = {31, 28, 31, 30, 31, 30,
+                                  31, 31, 30, 31, 30, 31};
+
    public:
-    bool judgeCircle(string moves) {
-        unordered_map<char, pair<int, int>> coords{{'U', make_pair(0, 1)},
-                                                   {'D', make_pair(0, -1)},
-                                                   {'R', make_pair(1, 0)},
-                                                   {'L', make_pair(-1, 0)}};
+    int getDaysOfTheMonth(int monthIndex)
+    {
+        if (monthIndex >= 12 || monthIndex < 0) return -1;
+        return daysOfTheMonth[monthIndex];
+    }
 
-        int x = 0, y = 0;
-        for (auto c : moves) {
-            auto p = coords[c];
-            x += p.first;
-            y += p.second;
-        }
+    int dayOfTheYear(string date)
+    {
+        int monthNumber = stoi(date.substr(0, 2));
+        int dateNumber = stoi(date.substr(3, 2));
 
-        return (x == 0 && y == 0) ? true : false;
+        int dayOfTheYear = 0;
+        for (int i = 0; i < monthNumber - 1; i++)
+            dayOfTheYear += getDaysOfTheMonth(i);
+
+        return dayOfTheYear + dateNumber;
+    }
+
+    int countDaysTogether(string arriveAlice, string leaveAlice,
+                          string arriveBob, string leaveBob)
+    {
+        int aArrive = dayOfTheYear(arriveAlice);
+        int aLeave = dayOfTheYear(leaveAlice);
+        int bArrive = dayOfTheYear(arriveBob);
+        int bLeave = dayOfTheYear(leaveBob);
+
+        int start = max(aArrive, bArrive);
+        int end = min(aLeave, bLeave);
+
+        return max(0, end - start + 1);
     }
 };
 
-int main() {
+int main()
+{
     Solution sol;
-    string moves = "UUD";
+    string arriveAlice = "08-15";
+    string leaveAlice = "08-18";
+    string arriveBob = "08-16";
+    string leaveBob = "08-19";
 
-    cout << sol.judgeCircle(moves) << endl;
+    cout << sol.countDaysTogether(arriveAlice, leaveAlice, arriveBob, leaveBob)
+         << endl;
 
     return 0;
 }

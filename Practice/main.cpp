@@ -1,62 +1,43 @@
-// Leetcode: Count Days Spent Together
-// https://leetcode.com/problems/count-days-spent-together
+// Leetcode: Minimum Cost of Buying Candies With Discount
+// https://leetcode.com/problems/minimum-cost-of-buying-candies-with-discount
 
 #include <algorithm>
 #include <iostream>
-#include <string>
 #include <vector>
 using namespace std;
 
 class Solution
 {
-   private:
-    vector<int> daysOfTheMonth = {31, 28, 31, 30, 31, 30,
-                                  31, 31, 30, 31, 30, 31};
-
    public:
-    int getDaysOfTheMonth(int monthIndex)
+    int minimumCost(vector<int>& cost)
     {
-        if (monthIndex >= 12 || monthIndex < 0) return -1;
-        return daysOfTheMonth[monthIndex];
-    }
+        sort(cost.begin(), cost.end());
 
-    int dayOfTheYear(string date)
-    {
-        int monthNumber = stoi(date.substr(0, 2));
-        int dateNumber = stoi(date.substr(3, 2));
+        int minCost = 0;
+        int itr = cost.size() - 1;
+        int cnt = 0;
+        while (itr >= 0)
+        {
+            if (cnt == 2)
+            {
+                cnt = 0;
+                itr--;
+                continue;
+            }
+            minCost += cost[itr];
+            cnt++;
+            itr--;
+        }
 
-        int dayOfTheYear = 0;
-        for (int i = 0; i < monthNumber - 1; i++)
-            dayOfTheYear += getDaysOfTheMonth(i);
-
-        return dayOfTheYear + dateNumber;
-    }
-
-    int countDaysTogether(string arriveAlice, string leaveAlice,
-                          string arriveBob, string leaveBob)
-    {
-        int aArrive = dayOfTheYear(arriveAlice);
-        int aLeave = dayOfTheYear(leaveAlice);
-        int bArrive = dayOfTheYear(arriveBob);
-        int bLeave = dayOfTheYear(leaveBob);
-
-        int start = max(aArrive, bArrive);
-        int end = min(aLeave, bLeave);
-
-        return max(0, end - start + 1);
+        return minCost;
     }
 };
 
 int main()
 {
+    vector<int> cost = {1, 2, 3};
     Solution sol;
-    string arriveAlice = "08-15";
-    string leaveAlice = "08-18";
-    string arriveBob = "08-16";
-    string leaveBob = "08-19";
-
-    cout << sol.countDaysTogether(arriveAlice, leaveAlice, arriveBob, leaveBob)
-         << endl;
+    cout << sol.minimumCost(cost) << endl;
 
     return 0;
 }

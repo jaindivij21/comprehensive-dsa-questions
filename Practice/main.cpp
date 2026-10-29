@@ -1,43 +1,43 @@
-// Leetcode: Minimum Cost of Buying Candies With Discount
-// https://leetcode.com/problems/minimum-cost-of-buying-candies-with-discount
+// Leetcode: Minimum XOR Path in a Grid
+// https://leetcode.com/problems/minimum-xor-path-in-a-grid
 
-#include <algorithm>
 #include <iostream>
+#include <unordered_set>
 #include <vector>
 using namespace std;
 
-class Solution
-{
-   public:
-    int minimumCost(vector<int>& cost)
-    {
-        sort(cost.begin(), cost.end());
+class Solution {
+public:
+  int minCost(vector<vector<int>> &grid) {
+    int rows = grid.size();
+    int cols = grid[0].size();
+    vector<vector<unordered_set<int>>> dp(rows, vector<unordered_set<int>>(cols));
 
-        int minCost = 0;
-        int itr = cost.size() - 1;
-        int cnt = 0;
-        while (itr >= 0)
-        {
-            if (cnt == 2)
-            {
-                cnt = 0;
-                itr--;
-                continue;
-            }
-            minCost += cost[itr];
-            cnt++;
-            itr--;
-        }
-
-        return minCost;
+    dp[0][0].insert(grid[0][0]);
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
+        if (i == 0 && j == 0)
+          continue;
+        if (i > 0)
+          for (int x : dp[i - 1][j])
+            dp[i][j].insert(x ^ grid[i][j]);
+        if (j > 0)
+          for (int x : dp[i][j - 1])
+            dp[i][j].insert(x ^ grid[i][j]);
+      }
     }
+
+    int ans = INT_MAX;
+    for (auto i : dp[rows - 1][cols - 1])
+      ans = min(ans, i);
+    return ans;
+  }
 };
 
-int main()
-{
-    vector<int> cost = {1, 2, 3};
-    Solution sol;
-    cout << sol.minimumCost(cost) << endl;
+int main() {
+  vector<vector<int>> grid = {{1, 2}, {3, 4}};
+  Solution sol;
+  cout << sol.minCost(grid) << endl;
 
-    return 0;
+  return 0;
 }

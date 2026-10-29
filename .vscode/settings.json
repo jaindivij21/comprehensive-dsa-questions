@@ -1,6 +1,7 @@
 {
   "files.associations": {
     "*.dbclient-js": "javascript",
+    "*.ejs": "html",
     "*.cpp": "cpp",
     "*.erb": "erb",
     "iostream": "cpp",
@@ -46,6 +47,8 @@
     "optional": "cpp",
     "print": "cpp",
     "unordered_map": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "memory": "cpp",
+    "tuple": "cpp"
   }
 }

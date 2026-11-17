@@ -1,43 +1,39 @@
-// Leetcode: Minimum XOR Path in a Grid
-// https://leetcode.com/problems/minimum-xor-path-in-a-grid
+// Leetcode: Calculate Digit Sum of a String
+// https://leetcode.com/problems/calculate-digit-sum-of-a-string/
 
 #include <iostream>
-#include <unordered_set>
-#include <vector>
+#include <string>
 using namespace std;
 
 class Solution {
 public:
-  int minCost(vector<vector<int>> &grid) {
-    int rows = grid.size();
-    int cols = grid[0].size();
-    vector<vector<unordered_set<int>>> dp(rows, vector<unordered_set<int>>(cols));
+  string digitSum(string s, int k) {
+    // Base Case
+    if (s.size() <= k)
+      return s;
 
-    dp[0][0].insert(grid[0][0]);
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < cols; j++) {
-        if (i == 0 && j == 0)
-          continue;
-        if (i > 0)
-          for (int x : dp[i - 1][j])
-            dp[i][j].insert(x ^ grid[i][j]);
-        if (j > 0)
-          for (int x : dp[i][j - 1])
-            dp[i][j].insert(x ^ grid[i][j]);
+    // Recursive Cases
+    string s2 = "";
+    for (int i = 0; i < s.size(); i += k) {
+      int temp = 0;
+      for (int j = 0; j < k && i + j < s.size(); j++) {
+        temp += (s[i + j] - '0');
       }
+      s2 += to_string(temp);
     }
 
-    int ans = INT_MAX;
-    for (auto i : dp[rows - 1][cols - 1])
-      ans = min(ans, i);
-    return ans;
+    return digitSum(s2, k);
   }
 };
 
 int main() {
-  vector<vector<int>> grid = {{1, 2}, {3, 4}};
+  string s;
+  int k;
+
+  cin >> s >> k;
+
   Solution sol;
-  cout << sol.minCost(grid) << endl;
+  cout << sol.digitSum(s, k) << endl;
 
   return 0;
 }

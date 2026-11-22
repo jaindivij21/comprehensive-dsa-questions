@@ -1,39 +1,51 @@
-// Leetcode: Calculate Digit Sum of a String
-// https://leetcode.com/problems/calculate-digit-sum-of-a-string/
+// Leetcode: Find the Maximum Number of Elements in Subset
+// https://leetcode.com/problems/find-the-maximum-number-of-elements-in-subset/
 
 #include <iostream>
-#include <string>
+#include <unordered_map>
+#include <vector>
 using namespace std;
 
 class Solution {
 public:
-  string digitSum(string s, int k) {
-    // Base Case
-    if (s.size() <= k)
-      return s;
+  int maximumLength(vector<int> &nums) {
+    unordered_map<long long, int> freq;
+    for (int x : nums)
+      freq[x]++;
 
-    // Recursive Cases
-    string s2 = "";
-    for (int i = 0; i < s.size(); i += k) {
-      int temp = 0;
-      for (int j = 0; j < k && i + j < s.size(); j++) {
-        temp += (s[i + j] - '0');
-      }
-      s2 += to_string(temp);
+    int ans = 1;
+    if (freq.count(1)) {
+      int c = freq[1];
+      ans = max(ans, c % 2 ? c : c - 1);
     }
 
-    return digitSum(s2, k);
+    for (auto &[x, count] : freq) {
+      if (x == 1)
+        continue;
+
+      long long curr = x;
+      int pairs = 0;
+      while (curr <= LONG_MAX && freq.count(curr) && freq[curr] >= 2) {
+        pairs++;
+        curr = curr * curr;
+      }
+
+      int len;
+      if (curr <= LONG_MAX && freq.count(curr))
+        len = 2 * pairs + 1;
+      else
+        len = 2 * pairs - 1;
+
+      ans = max(ans, len);
+    }
+    return ans;
   }
 };
 
 int main() {
-  string s;
-  int k;
-
-  cin >> s >> k;
+  vector<int> nums = {5, 4, 1, 2, 2};
 
   Solution sol;
-  cout << sol.digitSum(s, k) << endl;
-
+  cout << sol.maximumLength(nums) << endl;
   return 0;
 }

@@ -1,51 +1,57 @@
-// Leetcode: Find the Maximum Number of Elements in Subset
-// https://leetcode.com/problems/find-the-maximum-number-of-elements-in-subset/
+// Leetcode: Product of the Last K Numbers
+// https://leetcode.com/problems/product-of-the-last-k-numbers
 
 #include <iostream>
-#include <unordered_map>
 #include <vector>
 using namespace std;
 
-class Solution {
+class ProductOfNumbers {
 public:
-  int maximumLength(vector<int> &nums) {
-    unordered_map<long long, int> freq;
-    for (int x : nums)
-      freq[x]++;
+  vector<int> nums;
 
-    int ans = 1;
-    if (freq.count(1)) {
-      int c = freq[1];
-      ans = max(ans, c % 2 ? c : c - 1);
+  ProductOfNumbers() {}
+
+  void add(int num) {
+    if (num == 0) {
+      nums.clear();
+      return;
     }
 
-    for (auto &[x, count] : freq) {
-      if (x == 1)
-        continue;
-
-      long long curr = x;
-      int pairs = 0;
-      while (curr <= LONG_MAX && freq.count(curr) && freq[curr] >= 2) {
-        pairs++;
-        curr = curr * curr;
-      }
-
-      int len;
-      if (curr <= LONG_MAX && freq.count(curr))
-        len = 2 * pairs + 1;
-      else
-        len = 2 * pairs - 1;
-
-      ans = max(ans, len);
+    if (nums.empty()) {
+      nums.push_back(num);
+      return;
     }
-    return ans;
+
+    int size = nums.size();
+    nums.push_back(num * nums[size - 1]);
+  }
+
+  int getProduct(int k) {
+    int size = nums.size();
+    if (k > size)
+      return 0;
+    if (k == size)
+      return nums[size - 1];
+    return nums[size - 1] / nums[size - k - 1];
   }
 };
 
 int main() {
-  vector<int> nums = {5, 4, 1, 2, 2};
+  ProductOfNumbers productOfNumbers;
 
-  Solution sol;
-  cout << sol.maximumLength(nums) << endl;
+  productOfNumbers.add(3);
+  productOfNumbers.add(0);
+  productOfNumbers.add(2);
+  productOfNumbers.add(5);
+  productOfNumbers.add(4);
+
+  cout << productOfNumbers.getProduct(2) << endl; // 20
+  cout << productOfNumbers.getProduct(3) << endl; // 40
+  cout << productOfNumbers.getProduct(4) << endl; // 0
+
+  productOfNumbers.add(8);
+
+  cout << productOfNumbers.getProduct(2) << endl; // 32
+
   return 0;
 }

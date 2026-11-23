@@ -49,6 +49,8 @@
     "unordered_map": "cpp",
     "variant": "cpp",
     "memory": "cpp",
-    "tuple": "cpp"
+    "tuple": "cpp",
+    "map": "cpp",
+    "set": "cpp"
   }
 }
